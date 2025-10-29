@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.TaskManager" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="fontFamily">@font/geist</item>
+        <item name="textAllCaps">false</item>
+
+    </style>
+
+    <style name="Theme.TaskManager" parent="Base.Theme.TaskManager" />
+</resources>
+
