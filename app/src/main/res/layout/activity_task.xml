@@ -7,8 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".ActivityTask">
 
-
     <!-- botão de adicionar nova tarefa !-->
+
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"
+        android:src="@drawable/images"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
     <com.google.android.material.button.MaterialButton
         style="@style/Widget.MaterialComponents.Button"
         android:id="@+id/buttonAddTask"
@@ -48,7 +63,7 @@
             android:orientation="vertical"
             android:padding="12dp">
 
-            <!-- ✅ Título dentro do Card -->
+            <!-- título dentro do Card -->
             <TextView
                 android:id="@+id/textCategoryTitle"
                 android:layout_width="match_parent"
@@ -60,7 +75,7 @@
                 android:gravity="center"
                 android:layout_marginBottom="8dp" />
 
-            <!-- ✅ Lista de tarefas -->
+            <!-- lista de tarefas -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerTasks"
                 android:layout_width="match_parent"
@@ -80,12 +95,12 @@
     <!-- botão de ir p proxima tarefa !-->
     <com.google.android.material.button.MaterialButton
         style="@style/Widget.MaterialComponents.Button"
-        android:id="@+id/buttonGoToNextTask"
+        android:id="@+id/buttonGoToNextCategory"
         android:layout_width="200dp"
         android:layout_height="40dp"
         android:backgroundTint="@color/buttonColor"
         android:gravity="center"
-        android:text="Próxima tarefa"
+        android:text="Próxima categoria"
         android:textSize="12sp"
         app:cornerRadius="6sp"
         app:layout_constraintBottom_toBottomOf="parent"
