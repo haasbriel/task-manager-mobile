@@ -1,5 +1,6 @@
 package com.example.task_manager
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
@@ -54,18 +55,32 @@ class ActivityTask : AppCompatActivity() {
                 showTasksForCategory(categoriesWithTasks[categoryIndex])
             }
         }
+
+
+        buttonAddTask.setOnClickListener {
+            val intent = Intent(this, NewTaskActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun loadCategoriesWithTasks() {
         lifecycleScope.launch {
             val allTasks = db.taskDAO().getAllTasks()
 
-            // Agrupa por categoria e filtra só as que têm tarefas
+            // Agrupa por categoria original
             val grouped = allTasks.groupBy { it.type }
-            categoriesWithTasks = grouped.keys.toList()
+            val categories = grouped.keys.toMutableList()
+
+            // Adiciona COMPLETED se existirem tarefas concluídas
+            if (allTasks.any { it.completed }) {
+                categories.add(TaskType.COMPLETED)
+            }
+
+            categoriesWithTasks = categories
 
             if (categoriesWithTasks.isNotEmpty()) {
-                showTasksForCategory(categoriesWithTasks[0]) // Mostra a primeira
+                showTasksForCategory(categoriesWithTasks[0])
             } else {
                 textCategoryTitle.text = "Nenhuma tarefa cadastrada"
                 adapter.updateData(emptyList())
@@ -73,28 +88,35 @@ class ActivityTask : AppCompatActivity() {
         }
     }
 
+
+
     private fun showTasksForCategory(type: TaskType) {
         lifecycleScope.launch {
-            val tasks = db.taskDAO().getTasksByType(type)
+            val tasks = when(type) {
+                TaskType.COMPLETED -> db.taskDAO().getCompletedTasks()
+                else -> db.taskDAO().getTasksByType(type)
+            }
 
-            // Atualiza título
-            textCategoryTitle.text = when (type) {
+            textCategoryTitle.text = when(type) {
+                TaskType.COMPLETED -> "Tarefas Concluídas"
                 TaskType.PERSONAL -> "Pessoais"
                 TaskType.WORK -> "Trabalho"
                 TaskType.SOCIAL -> "Social"
                 TaskType.STUDY -> "Estudo"
             }
 
-            // Atualiza cor do card dinamicamente
-            val colorRes = when (type) {
+            val colorRes = when(type) {
                 TaskType.PERSONAL -> R.color.personalCategory
                 TaskType.WORK -> R.color.workCategory
                 TaskType.SOCIAL -> R.color.socialCategory
                 TaskType.STUDY -> R.color.studyCategory
+                TaskType.COMPLETED -> R.color.workCategory // ou alguma cor neutra
             }
             cardContainer.setCardBackgroundColor(getColor(colorRes))
 
             adapter.updateData(tasks)
         }
     }
+
+
 }

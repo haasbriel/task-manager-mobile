@@ -25,3 +25,6 @@ Thumbs.db
 
 # Misc
 .env
+
+/app/google-services.json
+

@@ -52,8 +52,8 @@
         app:strokeColor="@color/cardBorder"
         app:strokeWidth="1dp"
         app:cardElevation="0dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/buttonAddTask"
-        app:layout_constraintBottom_toTopOf="@id/buttonGoToNextTask"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -68,12 +68,12 @@
                 android:id="@+id/textCategoryTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tarefas"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:layout_marginBottom="8dp" />
+                android:text="Tarefas"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <!-- lista de tarefas -->
             <androidx.recyclerview.widget.RecyclerView
@@ -81,12 +81,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:scrollbars="vertical"
                 android:clipToPadding="false"
-                android:padding="4dp" />
+                android:padding="4dp"
+                android:scrollbars="vertical" />
 
         </LinearLayout>
-
 
 
     </com.google.android.material.card.MaterialCardView>
@@ -94,8 +93,8 @@
 
     <!-- botão de ir p proxima tarefa !-->
     <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.Button"
         android:id="@+id/buttonGoToNextCategory"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="200dp"
         android:layout_height="40dp"
         android:backgroundTint="@color/buttonColor"

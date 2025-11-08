@@ -46,6 +46,19 @@ class NewTaskActivity : AppCompatActivity() {
           buttonCancelTask = findViewById<MaterialButton>(R.id.buttonCancelTask)
         db = AppDatabase.getDatabase(this)
 
+        buttonCancelTask.setOnClickListener {
+
+            editTitleInput.text.clear()
+            editDescriptionInput.text.clear()
+            checkboxPersonalCategory.isChecked = false
+            checkboxWorkCategory.isChecked = false
+            checkboxSocialCategory.isChecked = false
+            checkboxStudyCategory.isChecked = false
+            checkboxStudyCategory.isChecked = false
+
+            finish()
+        }
+
         buttonSaveTask.setOnClickListener {
             val title = editTitleInput.text.toString()
             val description = editDescriptionInput.text.toString()
@@ -72,6 +85,13 @@ class NewTaskActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 db.taskDAO().create(newTask)
                 Toast.makeText(this@NewTaskActivity, "Tarefa salva com sucesso!", Toast.LENGTH_SHORT).show()
+                editTitleInput.text.clear()
+                editDescriptionInput.text.clear()
+                checkboxPersonalCategory.isChecked = false
+                checkboxWorkCategory.isChecked = false
+                checkboxSocialCategory.isChecked = false
+                checkboxStudyCategory.isChecked = false
+                checkboxStudyCategory.isChecked = false
                 finish()
             }
         }

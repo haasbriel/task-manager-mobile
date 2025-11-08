@@ -4,5 +4,7 @@ enum class TaskType {
         PERSONAL,
         WORK,
         SOCIAL,
-        STUDY
+        STUDY,
+
+        COMPLETED
 }

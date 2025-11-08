@@ -10,5 +10,5 @@ data class Task(
     val title: String,
     val description: String?,
     val type: TaskType,
-    val completed: Boolean = false
+    var completed: Boolean = false
 )
