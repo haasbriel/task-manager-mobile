@@ -5,10 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.seuprojeto.AppDatabase
 import kotlinx.coroutines.launch
 
@@ -20,7 +22,80 @@ class TaskAdapter(
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val checkbox: CheckBox = itemView.findViewById(R.id.checkboxTask)
         val title: TextView = itemView.findViewById(R.id.textTaskTitle)
+        val description: TextView = itemView.findViewById(R.id.textTaskDescription)
         val deleteButton: ImageButton = itemView.findViewById(R.id.deleteTaskButton)
+        val expandButton: ImageButton = itemView.findViewById(R.id.expandButton)
+        val expandableLayout: LinearLayout = itemView.findViewById(R.id.expandableLayout)
+        val cardView: MaterialCardView = itemView.findViewById(R.id.cardView)
+
+        fun bind(task: Task, position: Int, onTaskCompleted: (Task) -> Unit) {
+            // Primeiro remove listener antigo para evitar chamadas indesejadas
+            checkbox.setOnCheckedChangeListener(null)
+
+            title.text = task.title
+            description.text = when {
+                task.description.isNullOrEmpty() -> "Sem descrição"
+                else -> task.description
+            }
+            checkbox.isChecked = task.completed
+
+            // Fecha o card ao fazer bind (importante para reciclagem de views)
+            expandableLayout.visibility = View.GONE
+            expandButton.rotation = 0f
+
+            // Checkbox
+            checkbox.setOnCheckedChangeListener { _, isChecked ->
+                task.completed = isChecked
+                onTaskCompleted(task)
+            }
+
+            // Expandir/recolher ao clicar no card
+            cardView.setOnClickListener {
+                toggleExpansion()
+            }
+
+            // Expandir/recolher ao clicar no botão
+            expandButton.setOnClickListener {
+                toggleExpansion()
+            }
+
+            // Deletar tarefa
+            deleteButton.setOnClickListener {
+                val context = itemView.context
+                val db = AppDatabase.getDatabase(context)
+                (context as AppCompatActivity).lifecycleScope.launch {
+                    db.taskDAO().deleteTask(task)
+                    val newList = tasks.toMutableList()
+                    newList.removeAt(position)
+                    updateData(newList)
+                }
+            }
+        }
+
+        private fun toggleExpansion() {
+            if (expandableLayout.visibility == View.GONE) {
+                // Expandir com animação
+                expandableLayout.visibility = View.VISIBLE
+                expandableLayout.alpha = 0f
+                expandableLayout.animate()
+                    .alpha(1f)
+                    .setDuration(200)
+                    .start()
+
+                expandButton.animate().rotation(180f).setDuration(200).start()
+            } else {
+                // Recolher com animação
+                expandableLayout.animate()
+                    .alpha(0f)
+                    .setDuration(200)
+                    .withEndAction {
+                        expandableLayout.visibility = View.GONE
+                    }
+                    .start()
+
+                expandButton.animate().rotation(0f).setDuration(200).start()
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -31,30 +106,7 @@ class TaskAdapter(
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
-
-        // Primeiro remove listener antigo para evitar chamadas indesejadas
-        holder.checkbox.setOnCheckedChangeListener(null)
-
-        holder.title.text = task.title
-        holder.checkbox.isChecked = task.completed
-
-        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            // Atualiza o objeto task
-            task.completed = isChecked
-            // Chama callback para atualizar no banco
-            onTaskCompleted(task)
-        }
-
-        holder.deleteButton.setOnClickListener {
-            val context = holder.itemView.context
-            val db = AppDatabase.getDatabase(context)
-            (context as AppCompatActivity).lifecycleScope.launch {
-                db.taskDAO().deleteTask(task)
-                val newList = tasks.toMutableList()
-                newList.removeAt(position)
-                updateData(newList)
-            }
-        }
+        holder.bind(task, position, onTaskCompleted)
     }
 
     override fun getItemCount(): Int = tasks.size

@@ -103,7 +103,7 @@
                 android:id="@+id/titleInputLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="56dp"
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
@@ -140,14 +140,18 @@
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                app:boxCornerRadiusTopStart="16dp"
+                app:hintTextColor="@color/buttonColor"
+                app:boxStrokeColor="@color/buttonColor"
+
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/descriptionNewTaskInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top|start"
-                    android:hint="Ex: Passear com o cachorro no condomínio."
+                    android:hint="Ex: Levar o cachorro para passear às 15h."
                     android:minLines="4" />
             </com.google.android.material.textfield.TextInputLayout>
 
