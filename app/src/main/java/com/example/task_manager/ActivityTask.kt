@@ -3,11 +3,15 @@ package com.example.task_manager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.seuprojeto.AppDatabase
@@ -21,6 +25,8 @@ class ActivityTask : AppCompatActivity() {
     private lateinit var textCategoryTitle: TextView
     private lateinit var recyclerTasks: RecyclerView
     private lateinit var buttonNextCategory: MaterialButton
+
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     private var categoryIndex = 0
     private var categoriesWithTasks = listOf<TaskType>()
@@ -38,11 +44,21 @@ class ActivityTask : AppCompatActivity() {
         textCategoryTitle = findViewById(R.id.textCategoryTitle)
         cardContainer = findViewById(R.id.cardContainer)
         recyclerTasks.layoutManager = LinearLayoutManager(this)
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
         adapter = TaskAdapter(emptyList()) { task ->
-            // Quando o usuário marca a tarefa como concluída
             lifecycleScope.launch {
-                db.taskDAO().markAsCompleted(task.id)
-                showTasksForCategory(task.type) // recarrega a categoria atual
+                if (task.completed) {
+                    db.taskDAO().markAsCompleted(task.id)
+                } else {
+                    db.taskDAO().markAsUncompleted(task.id)
+                }
+                showTasksForCategory(task.type)
             }
         }
         recyclerTasks.adapter = adapter
@@ -62,17 +78,43 @@ class ActivityTask : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-    }
 
+        settingsButton.setOnClickListener { view ->
+            val popup = PopupMenu(this, view)
+            popup.menuInflater.inflate(R.menu.settings_menu, popup.menu)
+
+            popup.setOnMenuItemClickListener {
+                menuItem ->
+                when (menuItem.itemId) {
+                    R.id.logoutMenu -> {
+                        performLogout()
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popup.show()
+        }
+
+    }
+    private fun performLogout() {
+        googleSignInClient.signOut().addOnCompleteListener(this) {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
+    }
     private fun loadCategoriesWithTasks() {
         lifecycleScope.launch {
             val allTasks = db.taskDAO().getAllTasks()
 
-            // Agrupa por categoria original
-            val grouped = allTasks.groupBy { it.type }
+            val grouped = allTasks.groupBy {
+                it.type
+            }
             val categories = grouped.keys.toMutableList()
 
-            // Adiciona COMPLETED se existirem tarefas concluídas
             if (allTasks.any { it.completed }) {
                 categories.add(TaskType.COMPLETED)
             }
@@ -84,6 +126,7 @@ class ActivityTask : AppCompatActivity() {
             } else {
                 textCategoryTitle.text = "Nenhuma tarefa cadastrada"
                 adapter.updateData(emptyList())
+                cardContainer.setCardBackgroundColor(getColor(android.R.color.darker_gray))
             }
         }
     }
@@ -98,11 +141,11 @@ class ActivityTask : AppCompatActivity() {
             }
 
             textCategoryTitle.text = when(type) {
-                TaskType.COMPLETED -> "Tarefas Concluídas"
                 TaskType.PERSONAL -> "Pessoais"
                 TaskType.WORK -> "Trabalho"
                 TaskType.SOCIAL -> "Social"
                 TaskType.STUDY -> "Estudo"
+                TaskType.COMPLETED -> "Concluídas"
             }
 
             val colorRes = when(type) {
@@ -110,7 +153,7 @@ class ActivityTask : AppCompatActivity() {
                 TaskType.WORK -> R.color.workCategory
                 TaskType.SOCIAL -> R.color.socialCategory
                 TaskType.STUDY -> R.color.studyCategory
-                TaskType.COMPLETED -> R.color.workCategory // ou alguma cor neutra
+                TaskType.COMPLETED -> R.color.completedCategory
             }
             cardContainer.setCardBackgroundColor(getColor(colorRes))
 

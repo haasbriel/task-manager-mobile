@@ -4,8 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="buttonColor">#343438</color>
     <color name="cardBorder">#A3A3A3</color>
-    <color name="personalCategory">#FFA970</color>
-    <color name="workCategory">#43B9A3</color>
-    <color name="socialCategory">#EB5B4B</color>
-    <color name="studyCategory">#4D7EBB</color>
+    <color name="personalCategory">#F4A261</color>
+    <color name="workCategory">#2A9D8F</color>
+    <color name="socialCategory">#E76F51</color>
+    <color name="studyCategory">#457B9D   </color>
+    <color name='completedCategory'>#34A853</color>
 </resources>

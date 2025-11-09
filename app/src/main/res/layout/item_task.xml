@@ -1,6 +1,7 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
@@ -14,36 +15,89 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="8dp">
+        android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/checkboxTask"
-            android:layout_width="wrap_content"
+        <!-- Parte sempre visível -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/black" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp">
 
-        <TextView
-            android:id="@+id/textTaskTitle"
-            android:layout_width="0dp"
+            <CheckBox
+                android:id="@+id/checkboxTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/black" />
+
+            <TextView
+                android:id="@+id/textTaskTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Título da tarefa"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginStart="12dp" />
+
+            <!-- Ícone para indicar expansão -->
+            <ImageButton
+                android:id="@+id/expandButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/arrow"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Expandir" />
+
+            <ImageButton
+                android:id="@+id/deleteTaskButton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/trash"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:contentDescription="Deletar tarefa" />
+
+        </LinearLayout>
+
+        <!-- Parte expansível (inicialmente oculta) -->
+        <LinearLayout
+            android:id="@+id/expandableLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:singleLine="false"
-            android:text="Título da tarefa"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:layout_marginStart="12dp" />
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:paddingTop="0dp"
+            android:visibility="gone">
 
-        <ImageButton
-            android:id="@+id/deleteTaskButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/trash"
-            android:background="@android:color/transparent"
-            android:scaleType="centerInside"
-            android:contentDescription="Deletar tarefa" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descrição:"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/textTaskDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descrição da tarefa"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="13sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
