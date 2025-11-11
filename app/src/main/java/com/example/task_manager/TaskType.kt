@@ -5,6 +5,5 @@ enum class TaskType {
         WORK,
         SOCIAL,
         STUDY,
-
         COMPLETED
 }

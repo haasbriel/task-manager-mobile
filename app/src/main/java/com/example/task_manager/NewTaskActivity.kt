@@ -154,7 +154,7 @@ class NewTaskActivity : AppCompatActivity() {
         checkboxes.forEach { checkbox ->
             checkbox.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    // Desmarca todos os outros checkboxes
+                    // Desmarca todos os outros checkbox
                     checkboxes.filter { it != checkbox }.forEach { it.isChecked = false }
                 }
             }

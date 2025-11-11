@@ -29,7 +29,6 @@ class TaskAdapter(
         val cardView: MaterialCardView = itemView.findViewById(R.id.cardView)
 
         fun bind(task: Task, position: Int, onTaskCompleted: (Task) -> Unit) {
-            // Primeiro remove listener antigo para evitar chamadas indesejadas
             checkbox.setOnCheckedChangeListener(null)
 
             title.text = task.title
@@ -39,27 +38,22 @@ class TaskAdapter(
             }
             checkbox.isChecked = task.completed
 
-            // Fecha o card ao fazer bind (importante para reciclagem de views)
             expandableLayout.visibility = View.GONE
             expandButton.rotation = 0f
 
-            // Checkbox
             checkbox.setOnCheckedChangeListener { _, isChecked ->
                 task.completed = isChecked
                 onTaskCompleted(task)
             }
 
-            // Expandir/recolher ao clicar no card
             cardView.setOnClickListener {
                 toggleExpansion()
             }
 
-            // Expandir/recolher ao clicar no botão
             expandButton.setOnClickListener {
                 toggleExpansion()
             }
 
-            // Deletar tarefa
             deleteButton.setOnClickListener {
                 val context = itemView.context
                 val db = AppDatabase.getDatabase(context)
@@ -84,7 +78,6 @@ class TaskAdapter(
 
                 expandButton.animate().rotation(180f).setDuration(200).start()
             } else {
-                // Recolher com animação
                 expandableLayout.animate()
                     .alpha(0f)
                     .setDuration(200)
