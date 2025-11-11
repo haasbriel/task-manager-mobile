@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ActivityTask">
 
-    <!-- botão de adicionar nova tarefa !-->
-
+    <!-- botão das configurações !-->
     <ImageButton
         android:id="@+id/settingsButton"
         android:layout_width="40dp"
